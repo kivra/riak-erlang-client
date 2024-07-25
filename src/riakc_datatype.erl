@@ -45,11 +45,11 @@
 
 -export_type([datatype/0, update/1, context/0]).
 
--type maybe(T) :: T | undefined.
+-type 'maybe'(T) :: T | undefined.
 -type datatype() :: term().
 -type typename() :: atom().
--type context() :: maybe(binary()).
--type update(T) :: maybe({typename(), T, context()}).
+-type context() :: 'maybe'(binary()).
+-type update(T) :: 'maybe'({typename(), T, context()}).
 
 %% Constructs a new, empty container for the type. Use this when
 %% creating a new key.
@@ -95,7 +95,7 @@ module_for_type(map)      -> riakc_map.
 
 %% @doc Returns the appropriate container module for the given term,
 %% if possible.
--spec module_for_term(datatype()) -> maybe(module()).
+-spec module_for_term(datatype()) -> 'maybe'(module()).
 module_for_term(T) ->
     lists:foldl(fun(Mod, undefined) ->
                         case Mod:is_type(T) of

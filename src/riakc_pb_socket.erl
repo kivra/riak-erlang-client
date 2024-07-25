@@ -2238,8 +2238,8 @@ start_tls(State=#state{sock=Sock}) ->
     end.
 
 start_auth(State=#state{credentials={User,Pass}, sock=Sock}) ->
-    ok = ssl:send(Sock, riak_pb_codec:encode(#rpbauthreq{user=User,
-                                                         password=Pass})),
+    ok = ssl:send(Sock, riak_pb_codec:encode(#rpbauthreq{user=list_to_binary(User),
+                                                         password=list_to_binary(Pass)})),
     receive
         {ssl_error, Sock, Reason} ->
             {error, Reason};
@@ -2378,11 +2378,7 @@ remove_queued_request(Ref, State) ->
     end.
 
 %% @private
--ifdef(deprecated_19).
 mk_reqid() -> erlang:phash2(crypto:strong_rand_bytes(10)). % only has to be unique per-pid
--else.
-mk_reqid() -> erlang:phash2(crypto:rand_bytes(10)). % only has to be unique per-pid
--endif.
 
 %% @private
 wait_for_mapred(ReqId, Timeout) ->
