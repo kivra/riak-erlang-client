@@ -77,7 +77,7 @@
          replace_coverage/3, replace_coverage/4]).
 
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-         terminate/2, code_change/3]).
+         terminate/2, code_change/3, format_status/2]).
 
 %% Yokozuna admin commands
 -export([list_search_indexes/1, list_search_indexes/2,
@@ -1454,6 +1454,12 @@ terminate(_Reason, _State) -> ok.
 
 %% @private
 code_change(_OldVsn, State, _Extra) -> {ok, State}.
+
+%% @private
+format_status(terminate, [_, #state{credentials = {User, _Pass}} = State]) ->
+    State#state{credentials = {User, <<"REDACTED">>}};
+format_status(_Opt, [_PDict,State]) ->
+    State.
 
 %% ====================================================================
 %% internal functions
